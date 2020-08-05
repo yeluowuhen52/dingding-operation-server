@@ -10,9 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>quickshare-app</module>
-        <module>quickshare-app-sample</module>
-        <module>quickshare-weixin-service</module>
+        <module>quickshare-dingding-service</module>
     </modules>
 
     <properties>

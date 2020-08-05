@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "dingding")
-@Component
+//@Component
 public class DingDingProperties {
     /**
      * 设置钉钉的corpId

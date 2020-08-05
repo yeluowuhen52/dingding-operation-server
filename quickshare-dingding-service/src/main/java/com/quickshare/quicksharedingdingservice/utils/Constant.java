@@ -8,7 +8,18 @@ package com.quickshare.quicksharedingdingservice.utils;
  * @Update:
  */
 public class Constant {
+    /**
+     * 默认钉钉配置信息
+     */
+    public static String DefaultDingDingConfig = "default_dingding_config";
+
+    /**
+     * 返回值对象
+     */
     public static class Response {
+        /**
+         * 服务返回正确信息
+         */
         public static int ok = 0;
     }
 }

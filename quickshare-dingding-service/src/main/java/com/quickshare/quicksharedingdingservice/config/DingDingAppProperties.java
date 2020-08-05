@@ -15,6 +15,10 @@ import lombok.Setter;
 @Setter
 public class DingDingAppProperties {
   /**
+   * 钉钉corpId
+   */
+  private String corpId;
+  /**
    * 钉钉appKey
    */
   private String appKey;
@@ -23,9 +27,9 @@ public class DingDingAppProperties {
    */
   private String appsecret;
   /**
-   * 钉钉应用agentid
+   * 钉钉应用agentId
    */
-  private Long agentid;
+  private Long agentId;
   /**
    * 钉钉基地址
    */

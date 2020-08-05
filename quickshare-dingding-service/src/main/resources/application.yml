@@ -13,5 +13,5 @@ dingding:
   appConfigs:
    - appKey: dingjlapmolmuexyjgxd
      appsecret: plDvOLLUjf4ayNjlWlj1py-fD9e25BUqtGQ-oJYx88_70hGDxUZjIriHeELM89Ls
-     agentid: 844092190
+     agentId: 844092190
      baseUrl: https://oapi.dingtalk.com

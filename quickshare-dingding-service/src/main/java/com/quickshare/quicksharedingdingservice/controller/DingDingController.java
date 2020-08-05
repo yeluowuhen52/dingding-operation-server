@@ -9,11 +9,10 @@ import com.dingtalk.api.response.OapiGettokenResponse;
 import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
 import com.dingtalk.api.response.OapiUserGetByMobileResponse;
 import com.quickshare.quicksharedingdingservice.beans.BooleanReturnBean;
+import com.quickshare.quicksharedingdingservice.config.DingDingAppProperties;
+import com.quickshare.quicksharedingdingservice.config.DingDingConfigurationSwitch;
 import com.quickshare.quicksharedingdingservice.config.DingDingProperties;
-import com.quickshare.quicksharedingdingservice.utils.CommonUtil;
-import com.quickshare.quicksharedingdingservice.utils.Constant;
-import com.quickshare.quicksharedingdingservice.utils.DingDingApiUrl;
-import com.quickshare.quicksharedingdingservice.utils.DingDingRequestUtils;
+import com.quickshare.quicksharedingdingservice.utils.*;
 import com.taobao.api.ApiException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +28,19 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class DingDingController {
-    @Autowired
-    DingDingProperties dingDingProperties;
+//    @Autowired
+//    DingDingProperties dingDingProperties;
 
     @GetMapping("/sendDingDingMessage")
     public BooleanReturnBean sendDingDingMessage() {
         BooleanReturnBean booleanReturnBean = null;
+        //切换钉钉企业
+        DingDingAppProperties defaultConfig = DingDingSwitch.switchDingDingConfig("", null);
 
-        String appKey = dingDingProperties.getAppConfigs().get(0).getAppKey();
-        String appSecret = dingDingProperties.getAppConfigs().get(0).getAppsecret();
-        String baseUrl = dingDingProperties.getAppConfigs().get(0).getBaseUrl();
-        Long agentId = dingDingProperties.getAppConfigs().get(0).getAgentid();
+        String appKey = defaultConfig.getAppKey();
+        String appSecret = defaultConfig.getAppsecret();
+        String baseUrl = defaultConfig.getBaseUrl();
+        Long agentId = defaultConfig.getAgentId();
 
         OapiGettokenResponse response = null;
         try {
@@ -84,6 +85,7 @@ public class DingDingController {
             return booleanReturnBean;
         }
 
+        //如果没有返回成功，则调用接口查询失败原因
         if (responseSend.getErrcode() != Constant.Response.ok) {
             try {
                 DingDingRequestUtils.getOapiSendResponse(responseSend.getTaskId(), agentId, response.getAccessToken(), baseUrl, DingDingApiUrl.TopApi.getSendprogress);
