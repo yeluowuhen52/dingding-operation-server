@@ -38,6 +38,9 @@ public class DingDingRequestUtils {
         request.setAppsecret(appSecret);
         request.setHttpMethod("GET");
         response = client.execute(request);
+        if (response.getErrcode() != 0) {
+            throw new Exception(response.getErrmsg());
+        }
         return response;
     }
 
@@ -57,6 +60,9 @@ public class DingDingRequestUtils {
         request111.setMobile(mobile);
         OapiUserGetByMobileResponse response = null;
         response = client111.execute(request111, accessToken);
+        if (response.getErrcode() != 0) {
+            throw new Exception(response.getErrmsg());
+        }
         return response;
     }
 
@@ -80,11 +86,11 @@ public class DingDingRequestUtils {
     public static OapiMessageCorpconversationAsyncsendV2Response sendActionCardMessage(String userIds, Long agentId, boolean toAllUser,
                                                                                        String title, String content, String singleTitle, String url, String messageType,
                                                                                        String accessToken, String baseUrl, String apiUrl) throws Exception {
-        DingTalkClient client222 = new DefaultDingTalkClient(baseUrl + apiUrl);
-        OapiMessageCorpconversationAsyncsendV2Request request222 = new OapiMessageCorpconversationAsyncsendV2Request();
-        request222.setUseridList(userIds);
-        request222.setAgentId(agentId);
-        request222.setToAllUser(toAllUser);
+        DingTalkClient client = new DefaultDingTalkClient(baseUrl + apiUrl);
+        OapiMessageCorpconversationAsyncsendV2Request request = new OapiMessageCorpconversationAsyncsendV2Request();
+        request.setUseridList(userIds);
+        request.setAgentId(agentId);
+        request.setToAllUser(toAllUser);
 
         OapiMessageCorpconversationAsyncsendV2Request.Msg msg = new OapiMessageCorpconversationAsyncsendV2Request.Msg();
         msg.setActionCard(new OapiMessageCorpconversationAsyncsendV2Request.ActionCard());
@@ -101,11 +107,14 @@ public class DingDingRequestUtils {
             msg.getActionCard().setSingleUrl(url);
         }
         msg.setMsgtype(messageType);
-        request222.setMsg(msg);
+        request.setMsg(msg);
 
-        OapiMessageCorpconversationAsyncsendV2Response response222 = null;
-        response222 = client222.execute(request222, accessToken);
-        return response222;
+        OapiMessageCorpconversationAsyncsendV2Response response = null;
+        response = client.execute(request, accessToken);
+//        if (response.getErrcode() != Constant.Response.ok) {
+//            throw new Exception(response.getErrmsg());
+//        }
+        return response;
     }
 
     /**
@@ -119,13 +128,16 @@ public class DingDingRequestUtils {
      * @return
      * @throws Exception 异常信息
      */
-    public static OapiMessageCorpconversationGetsendprogressResponse getOapiUserGetByMobileResponse(Long taskId, Long agentId, String accessToken, String baseUrl, String apiUrl) throws Exception {
+    public static OapiMessageCorpconversationGetsendprogressResponse getOapiSendResponse(Long taskId, Long agentId, String accessToken, String baseUrl, String apiUrl) throws Exception {
 //        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/message/corpconversation/getsendprogress");
         DingTalkClient client = new DefaultDingTalkClient(baseUrl + apiUrl);
         OapiMessageCorpconversationGetsendprogressRequest request = new OapiMessageCorpconversationGetsendprogressRequest();
         request.setAgentId(agentId);
         request.setTaskId(taskId);
         OapiMessageCorpconversationGetsendprogressResponse response = client.execute(request, accessToken);
+        if (response.getErrcode() != Constant.Response.ok) {
+            throw new Exception(response.getErrmsg());
+        }
         return response;
     }
 }

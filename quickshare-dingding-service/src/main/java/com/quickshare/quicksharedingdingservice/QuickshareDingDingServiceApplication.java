@@ -6,10 +6,10 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication
 //@MapperScan("com.quickshare.quicksharedingdingservice.mapper")
-public class QuickshareWeixinServiceApplication extends SpringBootServletInitializer {
+public class QuickshareDingDingServiceApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
-        SpringApplication.run(QuickshareWeixinServiceApplication.class, args);
+        SpringApplication.run(QuickshareDingDingServiceApplication.class, args);
     }
 
 }
