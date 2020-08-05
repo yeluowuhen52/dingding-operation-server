@@ -1,0 +1,17 @@
+#log相关配置
+logging:
+  path: C:/log/dingding
+  level:
+    root: INFO
+    org.springframework.web: INFO
+
+#server:
+#  port: 8080
+
+dingding:
+  corpId: ding4ea5826e2e1e1c0fee0f45d8e4f7c288
+  appConfigs:
+   - appKey: dingjlapmolmuexyjgxd
+     appsecret: plDvOLLUjf4ayNjlWlj1py-fD9e25BUqtGQ-oJYx88_70hGDxUZjIriHeELM89Ls
+     agentid: 844092190
+     baseUrl: https://oapi.dingtalk.com
