@@ -2,7 +2,7 @@ package com.quickshare.quicksharedingdingservice.config;
 
 import com.google.common.collect.Maps;
 import com.quickshare.quicksharedingdingservice.utils.ConcurrentHashMapCacheUtilsInMemory;
-import com.quickshare.quicksharedingdingservice.utils.Constant;
+import com.quickshare.quicksharedingdingservice.constant.Constant;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -30,8 +30,8 @@ public class DingDingConfigurationSwitch {
     }
 
 
-    public static DingDingAppProperties getConfigService(String corpId, Integer agentId) {
-        return dingDingAppPropertiesMap.get(corpId + agentId);
+    public static DingDingAppProperties getConfigService(String corpId, Long agentId) {
+        return dingDingAppPropertiesMap.get(corpId + String.valueOf(agentId));
     }
 
     /**
@@ -41,6 +41,15 @@ public class DingDingConfigurationSwitch {
      */
     public static DingDingAppProperties getDefaultConfig() {
         return dingDingAppPropertiesMap.get(ConcurrentHashMapCacheUtilsInMemory.getCache(Constant.DefaultDingDingConfig));
+    }
+
+    /**
+     * 新增配置信息
+     *
+     * @return
+     */
+    public static void addDingDingConfig(DingDingAppProperties dingDingAppProperties) {
+        dingDingAppPropertiesMap.put(String.valueOf(dingDingAppProperties.getCorpId()) + String.valueOf(dingDingAppProperties.getAgentId()), dingDingAppProperties);
     }
 
     @PostConstruct
@@ -54,11 +63,11 @@ public class DingDingConfigurationSwitch {
             configStorage.setAgentId(a.getAgentId());
 
             if (null == ConcurrentHashMapCacheUtilsInMemory.getCache(Constant.DefaultDingDingConfig)) {
-                ConcurrentHashMapCacheUtilsInMemory.setCache(Constant.DefaultDingDingConfig, this.properties.getCorpId() + a.getAgentId());
+                ConcurrentHashMapCacheUtilsInMemory.setCache(Constant.DefaultDingDingConfig, String.valueOf(this.properties.getCorpId()) + String.valueOf(a.getAgentId()));
             }
 
             return configStorage;
-        }).collect(Collectors.toMap(service -> this.properties.getCorpId() + this.properties.getAppConfigs().get(0).getAgentId(), a -> a));
+        }).collect(Collectors.toMap(service -> String.valueOf(this.properties.getCorpId()) + String.valueOf(this.properties.getAppConfigs().get(0).getAgentId()), a -> a));
     }
 
 }

@@ -1,4 +1,4 @@
-package com.quickshare.quicksharedingdingservice.utils;
+package com.quickshare.quicksharedingdingservice.constant;
 
 /**
  * @Author: Jiang
@@ -7,7 +7,7 @@ package com.quickshare.quicksharedingdingservice.utils;
  * @Version: 1.0
  * @Update:
  */
-public class DingDingApiUrl {
+public class DingDingApi {
     /**
      * 基础信息接口
      */
@@ -15,7 +15,7 @@ public class DingDingApiUrl {
         /**
          * 获取AccessToken
          */
-        public static String getToken = "/gettoken";
+        public static String GetToken = "/gettoken";
     }
 
     /**
@@ -25,7 +25,7 @@ public class DingDingApiUrl {
         /**
          * 通过手机号获取用户信息
          */
-        public static String getByMobile = "/user/get_by_mobile";
+        public static String GetByMobile = "/user/get_by_mobile";
     }
 
     /**
@@ -35,10 +35,10 @@ public class DingDingApiUrl {
         /**
          * 发送消息
          */
-        public static String getCorpconversationAsyncsend_v2 = "/topapi/message/corpconversation/asyncsend_v2";
+        public static String GetCorpconversationAsyncsend_v2 = "/topapi/message/corpconversation/asyncsend_v2";
         /**
          * 获取消息发送返回状态
          */
-        public static String getSendprogress = "/topapi/message/corpconversation/getsendprogress";
+        public static String GetSendprogress = "/topapi/message/corpconversation/getsendprogress";
     }
 }

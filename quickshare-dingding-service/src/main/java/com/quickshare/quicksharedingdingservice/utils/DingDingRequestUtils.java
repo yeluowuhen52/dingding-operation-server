@@ -10,6 +10,8 @@ import com.dingtalk.api.response.OapiGettokenResponse;
 import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
 import com.dingtalk.api.response.OapiMessageCorpconversationGetsendprogressResponse;
 import com.dingtalk.api.response.OapiUserGetByMobileResponse;
+import com.quickshare.quicksharedingdingservice.constant.Constant;
+import com.quickshare.quicksharedingdingservice.constant.DingDingApi;
 import org.apache.http.util.TextUtils;
 
 /**
@@ -50,12 +52,11 @@ public class DingDingRequestUtils {
      * @param mobile      手机号
      * @param accessToken accessToken
      * @param baseUrl     基地址
-     * @param apiUrl      api地址
      * @return
      * @throws Exception 异常信息
      */
-    public static OapiUserGetByMobileResponse getOapiUserGetByMobileResponse(String mobile, String accessToken, String baseUrl, String apiUrl) throws Exception {
-        DingTalkClient client111 = new DefaultDingTalkClient(baseUrl + DingDingApiUrl.User.getByMobile);
+    public static OapiUserGetByMobileResponse getOapiUserGetByMobileResponse(String mobile, String accessToken, String baseUrl) throws Exception {
+        DingTalkClient client111 = new DefaultDingTalkClient(baseUrl + DingDingApi.User.GetByMobile);
         OapiUserGetByMobileRequest request111 = new OapiUserGetByMobileRequest();
         request111.setMobile(mobile);
         OapiUserGetByMobileResponse response = null;
@@ -69,24 +70,23 @@ public class DingDingRequestUtils {
     /**
      * 发送消息
      *
-     * @param userIds
-     * @param agentId
-     * @param toAllUser
-     * @param title
-     * @param content
-     * @param singleTitle
-     * @param url
-     * @param messageType
-     * @param accessToken
-     * @param baseUrl
-     * @param apiUrl
+     * @param userIds     用户id，可以用逗号隔开
+     * @param agentId     agentId
+     * @param toAllUser   发送给所有用户
+     * @param title       标题
+     * @param content     内容支持markdown
+     * @param singleTitle 链接提示标题
+     * @param url         链接地址
+     * @param messageType 消息类型
+     * @param accessToken accessToken
+     * @param baseUrl     基地址
      * @return
      * @throws Exception 异常信息
      */
     public static OapiMessageCorpconversationAsyncsendV2Response sendActionCardMessage(String userIds, Long agentId, boolean toAllUser,
                                                                                        String title, String content, String singleTitle, String url, String messageType,
-                                                                                       String accessToken, String baseUrl, String apiUrl) throws Exception {
-        DingTalkClient client = new DefaultDingTalkClient(baseUrl + apiUrl);
+                                                                                       String accessToken, String baseUrl) throws Exception {
+        DingTalkClient client = new DefaultDingTalkClient(baseUrl + DingDingApi.TopApi.GetCorpconversationAsyncsend_v2);
         OapiMessageCorpconversationAsyncsendV2Request request = new OapiMessageCorpconversationAsyncsendV2Request();
         request.setUseridList(userIds);
         request.setAgentId(agentId);
@@ -111,26 +111,25 @@ public class DingDingRequestUtils {
 
         OapiMessageCorpconversationAsyncsendV2Response response = null;
         response = client.execute(request, accessToken);
-//        if (response.getErrcode() != Constant.Response.ok) {
-//            throw new Exception(response.getErrmsg());
-//        }
+        if (response.getErrcode() != Constant.Response.ok) {
+            throw new Exception(response.getErrmsg());
+        }
         return response;
     }
 
     /**
      * 获取消息发送状态
      *
-     * @param taskId
-     * @param agentId
-     * @param accessToken
-     * @param baseUrl
-     * @param apiUrl
+     * @param taskId      任务id，发送消息成功之后返回的
+     * @param agentId     agentId
+     * @param accessToken accessToken
+     * @param baseUrl     基地址
      * @return
      * @throws Exception 异常信息
      */
-    public static OapiMessageCorpconversationGetsendprogressResponse getOapiSendResponse(Long taskId, Long agentId, String accessToken, String baseUrl, String apiUrl) throws Exception {
+    public static OapiMessageCorpconversationGetsendprogressResponse getOapiSendResponse(Long taskId, Long agentId, String accessToken, String baseUrl) throws Exception {
 //        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/message/corpconversation/getsendprogress");
-        DingTalkClient client = new DefaultDingTalkClient(baseUrl + apiUrl);
+        DingTalkClient client = new DefaultDingTalkClient(baseUrl + DingDingApi.TopApi.GetSendprogress);
         OapiMessageCorpconversationGetsendprogressRequest request = new OapiMessageCorpconversationGetsendprogressRequest();
         request.setAgentId(agentId);
         request.setTaskId(taskId);

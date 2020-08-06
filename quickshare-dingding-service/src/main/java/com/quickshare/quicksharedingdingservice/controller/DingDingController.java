@@ -1,21 +1,14 @@
 package com.quickshare.quicksharedingdingservice.controller;
 
-import com.dingtalk.api.DefaultDingTalkClient;
-import com.dingtalk.api.DingTalkClient;
-import com.dingtalk.api.request.OapiGettokenRequest;
-import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
-import com.dingtalk.api.request.OapiUserGetByMobileRequest;
 import com.dingtalk.api.response.OapiGettokenResponse;
 import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
 import com.dingtalk.api.response.OapiUserGetByMobileResponse;
 import com.quickshare.quicksharedingdingservice.beans.BooleanReturnBean;
 import com.quickshare.quicksharedingdingservice.config.DingDingAppProperties;
-import com.quickshare.quicksharedingdingservice.config.DingDingConfigurationSwitch;
-import com.quickshare.quicksharedingdingservice.config.DingDingProperties;
+import com.quickshare.quicksharedingdingservice.constant.Constant;
+import com.quickshare.quicksharedingdingservice.constant.DingDingApi;
 import com.quickshare.quicksharedingdingservice.utils.*;
-import com.taobao.api.ApiException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,7 +28,7 @@ public class DingDingController {
     public BooleanReturnBean sendDingDingMessage() {
         BooleanReturnBean booleanReturnBean = null;
         //切换钉钉企业
-        DingDingAppProperties defaultConfig = DingDingSwitch.switchDingDingConfig("", null);
+        DingDingAppProperties defaultConfig = DingDingSwitchUtils.switchDingDingConfig(null, null);
 
         String appKey = defaultConfig.getAppKey();
         String appSecret = defaultConfig.getAppsecret();
@@ -44,25 +37,19 @@ public class DingDingController {
 
         OapiGettokenResponse response = null;
         try {
-            response = DingDingRequestUtils.getOapiGettokenResponse(appKey, appSecret, baseUrl, DingDingApiUrl.Agent.getToken);
+            response = DingDingRequestUtils.getOapiGettokenResponse(appKey, appSecret, baseUrl, DingDingApi.Agent.GetToken);
         } catch (Exception e) {
             booleanReturnBean = CommonUtil.getTrueReturnBean(ExceptionUtils.getStackTrace(e));
             CommonUtil.writeErrorInfo(ExceptionUtils.getStackTrace(e));
-        }
-
-        if (booleanReturnBean != null) {
             return booleanReturnBean;
         }
 
         OapiUserGetByMobileResponse execute111 = null;
         try {
-            execute111 = DingDingRequestUtils.getOapiUserGetByMobileResponse("15212273352", response.getAccessToken(), baseUrl, DingDingApiUrl.User.getByMobile);
+            execute111 = DingDingRequestUtils.getOapiUserGetByMobileResponse("15212273352", response.getAccessToken(), baseUrl);
         } catch (Exception e) {
             booleanReturnBean = CommonUtil.getTrueReturnBean(ExceptionUtils.getStackTrace(e));
             CommonUtil.writeErrorInfo(ExceptionUtils.getStackTrace(e));
-        }
-
-        if (booleanReturnBean != null) {
             return booleanReturnBean;
         }
 
@@ -70,28 +57,26 @@ public class DingDingController {
                 + "\n" + "## 测试123111"
                 + "\n" + "## 测试123111";
 //                +"\n"+"<font face=\"STCAIYUN\">我是华文彩云</font>";
-        System.out.println(response.getAccessToken());
+//        System.out.println(response.getAccessToken());
         OapiMessageCorpconversationAsyncsendV2Response responseSend = null;
         try {
             responseSend = DingDingRequestUtils.sendActionCardMessage(execute111.getUserid(), agentId, false,
                     "xxx123411111" + System.currentTimeMillis(), markDownStr, "详情", "https://www.baidu.com",
-                    "action_card", response.getAccessToken(), baseUrl, DingDingApiUrl.TopApi.getCorpconversationAsyncsend_v2);
+                    Constant.DingDinngMessageType.ActionCard, response.getAccessToken(), baseUrl);
         } catch (Exception e) {
             booleanReturnBean = CommonUtil.getTrueReturnBean(ExceptionUtils.getStackTrace(e));
             CommonUtil.writeErrorInfo(ExceptionUtils.getStackTrace(e));
-        }
-
-        if (booleanReturnBean != null) {
             return booleanReturnBean;
         }
-
-        //如果没有返回成功，则调用接口查询失败原因
-        if (responseSend.getErrcode() != Constant.Response.ok) {
+//        OapiMessageCorpconversationGetsendprogressResponse oapiMessageCorpconversationGetsendprogressResponse = null;
+        //查询发送消息的状态
+        if (responseSend.getErrcode() == Constant.Response.ok) {
             try {
-                DingDingRequestUtils.getOapiSendResponse(responseSend.getTaskId(), agentId, response.getAccessToken(), baseUrl, DingDingApiUrl.TopApi.getSendprogress);
+                DingDingRequestUtils.getOapiSendResponse(responseSend.getTaskId(), agentId, response.getAccessToken(), baseUrl);
             } catch (Exception e) {
                 booleanReturnBean = CommonUtil.getTrueReturnBean(ExceptionUtils.getStackTrace(e));
                 CommonUtil.writeErrorInfo(ExceptionUtils.getStackTrace(e));
+                return booleanReturnBean;
             }
         }
 
