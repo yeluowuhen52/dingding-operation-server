@@ -1,5 +1,6 @@
 package com.quickshare.quicksharedingdingservice.utils;
 
+import com.dingtalk.api.response.OapiMessageCorpconversationGetsendresultResponse;
 import com.quickshare.quicksharedingdingservice.beans.BooleanReturnBean;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.util.TextUtils;
@@ -82,7 +83,6 @@ public class CommonUtil {
         booleanReturnBean.setCode(0);
         return booleanReturnBean;
     }
-
 
 
     /**
@@ -425,5 +425,49 @@ public class CommonUtil {
                 break;
         }
         return returnStr;
+    }
+
+    /**
+     * 获取钉钉发送消息的返回
+     *
+     * @param response 钉钉消息返回
+     * @return
+     */
+    public static String getDingDingSendResult(OapiMessageCorpconversationGetsendresultResponse.AsyncSendResult response) {
+        String errorMsg = "";
+
+        if (response.getForbiddenList() != null && response.getForbiddenList().size() != 0) {
+            errorMsg += "推送被禁止的具体原因列表：" + JsonUtils.toJson(response.getForbiddenList()) + ";";
+        }
+        // forbidden_list 推送被禁止的具体原因列表
+        // failed_user_id_list 发送失败的用户id
+        if (response.getFailedUserIdList() != null && response.getFailedUserIdList().size() != 0) {
+            errorMsg += "发送失败的用户id：" + JsonUtils.toJson(response.getForbiddenList()) + ";";
+        }
+        //invalid_dept_id_list 无效的部门id
+        if (response.getInvalidDeptIdList() != null && response.getInvalidDeptIdList().size() != 0) {
+            errorMsg += "发送失败的无效的部门id：" + JsonUtils.toJson(response.getInvalidDeptIdList()) + ";";
+        }
+        //invalid_user_id_list 无效的用户id
+        if (response.getInvalidUserIdList() != null && response.getInvalidUserIdList().size() != 0) {
+            errorMsg += "发送失败的无效的用户id：" + JsonUtils.toJson(response.getInvalidUserIdList()) + ";";
+        }
+        if (response.getForbiddenUserIdList() != null && response.getForbiddenUserIdList().size() != 0) {
+            errorMsg += "发送失败的无效的用户id：" + JsonUtils.toJson(response.getInvalidUserIdList()) + ";";
+        }
+        //forbidden_list 推送被禁止的具体原因列表
+        if (response.getForbiddenList() != null && response.getForbiddenList().size() != 0) {
+            errorMsg += "发送失败的推送被禁止的具体原因列表：" + JsonUtils.toJson(response.getForbiddenList()) + ";";
+        }
+        //因发送消息超过上限而被流控过滤后实际未发送的userid。未被限流的接收者仍会被收到消息。限流规则包括：
+        //forbidden_user_id_list
+        //1.同一个微应用相同消息的内容同一个用户一天只能接收一次
+        //2.同一个微应用给同一个用户发送消息，
+        //如果是第三方企业应用，一天最多为50次；
+        //如果是企业内部开发方式，一天最多为500次
+        if (response.getForbiddenUserIdList() != null && response.getForbiddenUserIdList().size() != 0) {
+            errorMsg += "发送失败的无效的用户id：" + JsonUtils.toJson(response.getInvalidUserIdList()) + ";";
+        }
+        return errorMsg;
     }
 }

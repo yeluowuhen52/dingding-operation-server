@@ -2,6 +2,7 @@ package com.quickshare.quicksharedingdingservice.utils;
 
 import com.quickshare.quicksharedingdingservice.config.DingDingAppProperties;
 import com.quickshare.quicksharedingdingservice.config.DingDingConfigurationSwitch;
+import com.quickshare.quicksharedingdingservice.constant.Constant;
 import org.apache.http.util.TextUtils;
 
 /**
@@ -21,7 +22,7 @@ public class DingDingSwitchUtils {
     public static DingDingAppProperties switchDingDingConfig(String corpId, Long agentId) {
         DingDingAppProperties selectConfig;
         if (TextUtils.isEmpty(corpId) || agentId == null) {
-            //测试新增配置信息
+            //测试新增配置信息（正式环境下，从数据库读取）
 //            DingDingAppProperties dingDingAppProperties = new DingDingAppProperties();
 //
 //            dingDingAppProperties.setCorpId("exewfewfewf");
@@ -41,6 +42,10 @@ public class DingDingSwitchUtils {
         if (selectConfig == null) {
             CommonUtil.writeNormalInfo("切换企业:" + corpId + ",应用:" + agentId + "失败，切换回默认企业...");
             selectConfig = DingDingConfigurationSwitch.getDefaultConfig();
+        }
+        //默认url
+        if (TextUtils.isEmpty(selectConfig.getBaseUrl())) {
+            selectConfig.setBaseUrl(Constant.DefaultDingDingUrl);
         }
         CommonUtil.writeNormalInfo("切换企业信息最终结果，企业信息:" + JsonUtils.toJson(selectConfig));
         return selectConfig;

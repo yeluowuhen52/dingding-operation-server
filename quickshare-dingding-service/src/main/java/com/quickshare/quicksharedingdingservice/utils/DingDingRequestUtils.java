@@ -2,14 +2,8 @@ package com.quickshare.quicksharedingdingservice.utils;
 
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
-import com.dingtalk.api.request.OapiGettokenRequest;
-import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
-import com.dingtalk.api.request.OapiMessageCorpconversationGetsendprogressRequest;
-import com.dingtalk.api.request.OapiUserGetByMobileRequest;
-import com.dingtalk.api.response.OapiGettokenResponse;
-import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
-import com.dingtalk.api.response.OapiMessageCorpconversationGetsendprogressResponse;
-import com.dingtalk.api.response.OapiUserGetByMobileResponse;
+import com.dingtalk.api.request.*;
+import com.dingtalk.api.response.*;
 import com.quickshare.quicksharedingdingservice.constant.Constant;
 import com.quickshare.quicksharedingdingservice.constant.DingDingApi;
 import org.apache.http.util.TextUtils;
@@ -28,13 +22,12 @@ public class DingDingRequestUtils {
      * @param appKey    appKey
      * @param appSecret appSecret
      * @param baseUrl   基地址
-     * @param apiUrl    api地址
      * @return
      * @throws Exception 异常信息
      */
-    public static OapiGettokenResponse getOapiGettokenResponse(String appKey, String appSecret, String baseUrl, String apiUrl) throws Exception {
+    public static OapiGettokenResponse getOapiGettokenResponse(String appKey, String appSecret, String baseUrl) throws Exception {
         OapiGettokenResponse response = null;
-        DefaultDingTalkClient client = new DefaultDingTalkClient(baseUrl + apiUrl);
+        DefaultDingTalkClient client = new DefaultDingTalkClient(baseUrl + DingDingApi.Agent.GetToken);
         OapiGettokenRequest request = new OapiGettokenRequest();
         request.setAppkey(appKey);
         request.setAppsecret(appSecret);
@@ -134,6 +127,29 @@ public class DingDingRequestUtils {
         request.setAgentId(agentId);
         request.setTaskId(taskId);
         OapiMessageCorpconversationGetsendprogressResponse response = client.execute(request, accessToken);
+        if (response.getErrcode() != Constant.Response.ok) {
+            throw new Exception(response.getErrmsg());
+        }
+        return response;
+    }
+
+    /**
+     * 获取消息返回状态
+     *
+     * @param taskId      任务id，发送消息成功之后返回的
+     * @param agentId     agentId
+     * @param accessToken accessToken
+     * @param baseUrl     基地址
+     * @return
+     * @throws Exception 异常信息
+     */
+    public static OapiMessageCorpconversationGetsendresultResponse getOapiSendResuktResponse(Long taskId, Long agentId, String accessToken, String baseUrl) throws Exception {
+//        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/message/corpconversation/getsendresult");
+        DingTalkClient client = new DefaultDingTalkClient(baseUrl + DingDingApi.TopApi.GetSendresult);
+        OapiMessageCorpconversationGetsendresultRequest request = new OapiMessageCorpconversationGetsendresultRequest();
+        request.setAgentId(agentId);
+        request.setTaskId(taskId);
+        OapiMessageCorpconversationGetsendresultResponse response = client.execute(request, accessToken);
         if (response.getErrcode() != Constant.Response.ok) {
             throw new Exception(response.getErrmsg());
         }
