@@ -288,6 +288,7 @@ public class CommonUtil {
             }
             String[] urls = baseUrl.split("#");
             realUrl = urls[0] + "?" + paramStr + "#" + urls[1];
+//            realUrl = baseUrl+"?"+paramStr;
         } catch (Exception ex) {
             realUrl = "";
         }
@@ -302,20 +303,19 @@ public class CommonUtil {
      * @param appId
      * @return
      */
-    public static String getRedirectWecharUrl(String baseUrl, HashMap<String, String> params, String appId) {
+    public static String getRedirectDingDingUrl(String baseUrl, HashMap<String, String> params, String appId) {
         String multiAddrsss = getMultiRealWecharUrl(baseUrl, params);
 
         String urlMultiEnCode = "";
 
         try {
-            urlMultiEnCode = URLEncoder.encode(multiAddrsss, "UTF-8");
+            urlMultiEnCode = URLEncoder.encode(multiAddrsss + "?", "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        String finalUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appId + "&redirect_uri=" + urlMultiEnCode +
-                "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
-
+        String finalUrl = "https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=" + appId +
+                "&response_type=code&scope=snsapi_auth&state=STATE&redirect_uri=" + urlMultiEnCode;
         return finalUrl;
     }
 

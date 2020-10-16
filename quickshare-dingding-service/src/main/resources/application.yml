@@ -5,8 +5,12 @@ logging:
     root: INFO
     org.springframework.web: INFO
 
-#server:
-#  port: 8080
+server:
+  port: 8081
+
+#钉钉默认appId和Secret
+appId: dingoa7ntlpbq3z2nu523m
+appSecret: Af1zUlPoXVffwjsM6_PCcUiP35E9iMpTUeBp1oUwYBZ-nnz_JyzqYw0skJkqppKD
 
 dingding:
   corpId: ding4ea5826e2e1e1c0fee0f45d8e4f7c288

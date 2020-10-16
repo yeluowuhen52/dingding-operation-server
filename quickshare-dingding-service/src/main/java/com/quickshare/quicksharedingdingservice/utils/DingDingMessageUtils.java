@@ -64,7 +64,7 @@ public class DingDingMessageUtils {
         //发送消息
         OapiMessageCorpconversationAsyncsendV2Response responseSend;
         try {
-            responseSend = DingDingRequestUtils.sendActionCardMessage("123321", dingAppProperties.getAgentId(), toAllUser,
+            responseSend = DingDingRequestUtils.sendActionCardMessage(executePhone.getUserid(), dingAppProperties.getAgentId(), toAllUser,
                     title, markDownStr, singleTitle, url,
                     Constant.DingDinngMessageType.ActionCard, response.getAccessToken(), dingAppProperties.getBaseUrl());
             CommonUtil.writeNormalInfo(methodName + "接口，" + "钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",发送消息结果：" + JsonUtils.toJson(responseSend));

@@ -44,5 +44,13 @@ public class DingDingApi {
          * 获取消息发送返回结果
          */
         public static String GetSendresult = "/topapi/message/corpconversation/getsendresult";
+        /**
+         * 根据unionid获取userid
+         */
+        public static String GetUseridByUnionid = "/user/getUseridByUnionid";
+        /**
+         * 服务端通过临时授权码获取授权用户的个人信息
+         */
+        public static String Getuserinfo_bycode = "/sns/getuserinfo_bycode";
     }
 }

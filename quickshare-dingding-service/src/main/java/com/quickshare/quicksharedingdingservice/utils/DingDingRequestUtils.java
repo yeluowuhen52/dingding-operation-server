@@ -26,7 +26,7 @@ public class DingDingRequestUtils {
      * @throws Exception 异常信息
      */
     public static OapiGettokenResponse getOapiGettokenResponse(String appKey, String appSecret, String baseUrl) throws Exception {
-        OapiGettokenResponse response = null;
+        OapiGettokenResponse response;
         DefaultDingTalkClient client = new DefaultDingTalkClient(baseUrl + DingDingApi.Agent.GetToken);
         OapiGettokenRequest request = new OapiGettokenRequest();
         request.setAppkey(appKey);
@@ -52,9 +52,9 @@ public class DingDingRequestUtils {
         DingTalkClient client111 = new DefaultDingTalkClient(baseUrl + DingDingApi.User.GetByMobile);
         OapiUserGetByMobileRequest request111 = new OapiUserGetByMobileRequest();
         request111.setMobile(mobile);
-        OapiUserGetByMobileResponse response = null;
+        OapiUserGetByMobileResponse response;
         response = client111.execute(request111, accessToken);
-        if (response.getErrcode() != 0) {
+        if (response.getErrcode() != Constant.Response.ok) {
             throw new Exception(response.getErrmsg());
         }
         return response;
@@ -102,7 +102,7 @@ public class DingDingRequestUtils {
         msg.setMsgtype(messageType);
         request.setMsg(msg);
 
-        OapiMessageCorpconversationAsyncsendV2Response response = null;
+        OapiMessageCorpconversationAsyncsendV2Response response;
         response = client.execute(request, accessToken);
         if (response.getErrcode() != Constant.Response.ok) {
             throw new Exception(response.getErrmsg());
@@ -150,6 +150,50 @@ public class DingDingRequestUtils {
         request.setAgentId(agentId);
         request.setTaskId(taskId);
         OapiMessageCorpconversationGetsendresultResponse response = client.execute(request, accessToken);
+        if (response.getErrcode() != Constant.Response.ok) {
+            throw new Exception(response.getErrmsg());
+        }
+        return response;
+    }
+
+    /**
+     * 服务端通过临时授权码获取授权用户的个人信息
+     *
+     * @param code      网页上返回的code
+     * @param appId     appId
+     * @param appSecret appSecret
+     * @param baseUrl   基地址
+     * @return
+     * @throws Exception 异常信息
+     */
+    public static OapiSnsGetuserinfoBycodeResponse getUnionidByCode(String code, String appId, String appSecret, String baseUrl) throws Exception {
+//        DefaultDingTalkClient  client = new DefaultDingTalkClient("https://oapi.dingtalk.com/sns/getuserinfo_bycode");
+        DingTalkClient client = new DefaultDingTalkClient(baseUrl + DingDingApi.TopApi.Getuserinfo_bycode);
+        OapiSnsGetuserinfoBycodeRequest request = new OapiSnsGetuserinfoBycodeRequest();
+        request.setTmpAuthCode(code);
+        OapiSnsGetuserinfoBycodeResponse response = client.execute(request, appId, appSecret);
+        if (response.getErrcode() != Constant.Response.ok) {
+            throw new Exception(response.getErrmsg());
+        }
+        return response;
+    }
+
+    /**
+     * 根据unionid获取userid
+     *
+     * @param unionId     员工在当前开发者企业账号范围内的唯一标识，系统生成，固定值，不会改变
+     * @param accessToken accessToken
+     * @param baseUrl     基地址
+     * @return
+     * @throws Exception 异常信息
+     */
+    public static OapiUserGetUseridByUnionidResponse getUseridByUnionid(String unionId, String accessToken, String baseUrl) throws Exception {
+//        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/user/getUseridByUnionid");
+        DingTalkClient client = new DefaultDingTalkClient(baseUrl + DingDingApi.TopApi.GetUseridByUnionid);
+        OapiUserGetUseridByUnionidRequest request = new OapiUserGetUseridByUnionidRequest();
+        request.setUnionid(unionId);
+        request.setHttpMethod("GET");
+        OapiUserGetUseridByUnionidResponse response = client.execute(request, accessToken);
         if (response.getErrcode() != Constant.Response.ok) {
             throw new Exception(response.getErrmsg());
         }
