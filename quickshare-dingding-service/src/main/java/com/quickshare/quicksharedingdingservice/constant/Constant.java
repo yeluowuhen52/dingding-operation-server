@@ -13,6 +13,10 @@ public class Constant {
      */
     public static String DefaultDingDingConfig = "default_dingding_config";
     /**
+     * 默认钉钉配置信息(appId)
+     */
+    public static String DefaultDingDingAppIdConfig = "default_dingding_appId_config";
+    /**
      * 默认钉钉基地址
      */
     public static String DefaultDingDingUrl = "https://oapi.dingtalk.com";

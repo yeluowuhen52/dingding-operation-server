@@ -4,6 +4,7 @@ import com.dingtalk.api.response.*;
 import com.quickshare.quicksharedingdingservice.beans.BooleanReturnBean;
 import com.quickshare.quicksharedingdingservice.beans.GeneralReturnBean;
 import com.quickshare.quicksharedingdingservice.config.DingDingAppProperties;
+import com.quickshare.quicksharedingdingservice.config.DingDingAppidsProperties;
 import com.quickshare.quicksharedingdingservice.constant.Constant;
 import com.quickshare.quicksharedingdingservice.utils.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -27,15 +28,16 @@ public class CommonOperationController {
 //    DingDingProperties dingDingProperties;
 
       @GetMapping("/GetUnionidByCode")
-    public GeneralReturnBean<OapiSnsGetuserinfoBycodeResponse.UserInfo> getUnionidByCode(String code, @RequestParam(required = false) String appid,
-                                                                                         @RequestParam(required = false) String appSecret) {
+    public GeneralReturnBean<OapiSnsGetuserinfoBycodeResponse.UserInfo> getUnionidByCode(String code, @RequestParam(required = false) String appid) {
         String errorMsg = "";
         //切换钉钉企业
         DingDingAppProperties defaultConfig = DingDingSwitchUtils.switchDingDingConfig(null, null);
+        DingDingAppidsProperties defaultAppidConfig = DingDingSwitchUtils.switchDingDingAppidsConfig(appid);
+
         OapiSnsGetuserinfoBycodeResponse oapiSnsGetuserinfoBycodeResponse = null;
         try {
-            oapiSnsGetuserinfoBycodeResponse = DingDingRequestUtils.getUnionidByCode(code, "dingoa7ntlpbq3z2nu523m",
-                    "Af1zUlPoXVffwjsM6_PCcUiP35E9iMpTUeBp1oUwYBZ-nnz_JyzqYw0skJkqppKD", defaultConfig.getBaseUrl());
+            oapiSnsGetuserinfoBycodeResponse = DingDingRequestUtils.getUnionidByCode(code, defaultAppidConfig.getAppId(),
+                    defaultAppidConfig.getAppSecret(), defaultConfig.getBaseUrl());
         } catch (Exception e) {
             errorMsg = e.toString();
             CommonUtil.writeErrorInfo(ExceptionUtils.getStackTrace(e));

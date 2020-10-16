@@ -24,7 +24,12 @@ public class DingDingProperties {
      * 设置钉钉的corpId
      */
     private String corpId;
+    /**
+     * 基地址
+     */
+    private String baseUrl;
     private List<DingDingAppProperties> appConfigs;
+    private List<DingDingAppidsProperties> appidConfigs;
 
     @Override
     public String toString() {

@@ -1,6 +1,7 @@
 package com.quickshare.quicksharedingdingservice.utils;
 
 import com.quickshare.quicksharedingdingservice.config.DingDingAppProperties;
+import com.quickshare.quicksharedingdingservice.config.DingDingAppidsProperties;
 import com.quickshare.quicksharedingdingservice.config.DingDingConfigurationSwitch;
 import com.quickshare.quicksharedingdingservice.constant.Constant;
 import org.apache.http.util.TextUtils;
@@ -48,6 +49,39 @@ public class DingDingSwitchUtils {
             selectConfig.setBaseUrl(Constant.DefaultDingDingUrl);
         }
         CommonUtil.writeNormalInfo("切换企业信息最终结果，企业信息:" + JsonUtils.toJson(selectConfig));
+        return selectConfig;
+    }
+
+    /**
+     * 切换钉钉AppId配置信息
+     *
+     * @param appId  appId
+     */
+    public static DingDingAppidsProperties switchDingDingAppidsConfig(String appId) {
+        DingDingAppidsProperties selectConfig;
+        if (TextUtils.isEmpty(appId)) {
+            //测试新增配置信息（正式环境下，从数据库读取）
+//            DingDingAppProperties dingDingAppProperties = new DingDingAppProperties();
+//
+//            dingDingAppProperties.setCorpId("exewfewfewf");
+//            dingDingAppProperties.setBaseUrl("http://www.baidu.com");
+//            dingDingAppProperties.setAppsecret("sfasfasf");
+//            dingDingAppProperties.setAppKey("aaaaaa");
+//            dingDingAppProperties.setAgentId(641732742L);
+//
+//            DingDingConfigurationSwitch.addDingDingConfig(dingDingAppProperties);
+//            DingDingSwitchUtils.switchDingDingConfig("exewfewfewf", 641732742L);
+
+            selectConfig = DingDingConfigurationSwitch.getDefaultAppIdConfig();
+        } else {
+            selectConfig = DingDingConfigurationSwitch.getDefaultAppIdConfig();
+        }
+
+        if (selectConfig == null) {
+            CommonUtil.writeNormalInfo("切换企业:" + appId  + "失败，切换回默认企业...");
+            selectConfig = DingDingConfigurationSwitch.getDefaultAppIdConfig();
+        }
+        CommonUtil.writeNormalInfo("切换企业信息最终结果，企业appId信息:" + JsonUtils.toJson(selectConfig));
         return selectConfig;
     }
 }

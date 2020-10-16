@@ -14,8 +14,14 @@ appSecret: Af1zUlPoXVffwjsM6_PCcUiP35E9iMpTUeBp1oUwYBZ-nnz_JyzqYw0skJkqppKD
 
 dingding:
   corpId: ding4ea5826e2e1e1c0fee0f45d8e4f7c288
+  baseUrl: https://oapi.dingtalk.com
   appConfigs:
    - appKey: dingjlapmolmuexyjgxd
      appsecret: plDvOLLUjf4ayNjlWlj1py-fD9e25BUqtGQ-oJYx88_70hGDxUZjIriHeELM89Ls
      agentId: 844092190
-     baseUrl: https://oapi.dingtalk.com
+   - appKey: 111
+     appsecret: 222
+     agentId: 333
+  appidConfigs:
+   - appId: dingoa7ntlpbq3z2nu523m
+     appSecret: Af1zUlPoXVffwjsM6_PCcUiP35E9iMpTUeBp1oUwYBZ-nnz_JyzqYw0skJkqppKD
