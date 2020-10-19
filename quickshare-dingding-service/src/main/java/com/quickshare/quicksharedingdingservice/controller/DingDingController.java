@@ -54,6 +54,7 @@ public class DingDingController {
                     "详情", url, markDownStr, false);
         } catch (Exception e) {
             errorMsg = "异常信息:" + e.toString();
+            CommonUtil.writeNormalInfo("sendDingDingMessage接口异常信息：" + ExceptionUtils.getStackTrace(e));
         }
 
         if (oapiMessageCorpconversationGetsendresultResponse != null) {

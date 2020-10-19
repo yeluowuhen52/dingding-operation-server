@@ -17,8 +17,8 @@ import java.util.HashMap;
 
 /**
  * @Author: Jiang
- * @Description: 钉钉消息推送
- * @Date: 2020-08-04 16:02
+ * @Description: 钉钉用户校验
+ * @Date: 2020-10-19 16:02
  * @Version: 1.0
  * @Update:
  */
@@ -27,7 +27,14 @@ public class CommonOperationController {
 //    @Autowired
 //    DingDingProperties dingDingProperties;
 
-      @GetMapping("/GetUnionidByCode")
+    /**
+     * 服务端通过临时授权码获取授权用户的个人信息
+     *
+     * @param code  临时code
+     * @param appid appId
+     * @return
+     */
+    @GetMapping("/GetUnionidByCode")
     public GeneralReturnBean<OapiSnsGetuserinfoBycodeResponse.UserInfo> getUnionidByCode(String code, @RequestParam(required = false) String appid) {
         String errorMsg = "";
         //切换钉钉企业
@@ -38,9 +45,11 @@ public class CommonOperationController {
         try {
             oapiSnsGetuserinfoBycodeResponse = DingDingRequestUtils.getUnionidByCode(code, defaultAppidConfig.getAppId(),
                     defaultAppidConfig.getAppSecret(), defaultConfig.getBaseUrl());
+            CommonUtil.writeNormalInfo("GetUnionidByUnionid接口钉钉配置信息：" + JsonUtils.toJson(defaultConfig) + ",换取用户code信息："
+                    + JsonUtils.toJson(oapiSnsGetuserinfoBycodeResponse));
         } catch (Exception e) {
             errorMsg = e.toString();
-            CommonUtil.writeErrorInfo(ExceptionUtils.getStackTrace(e));
+            CommonUtil.writeNormalInfo("GetUnionidByUnionid接口异常信息:" + ExceptionUtils.getStackTrace(e));
         }
 
         GeneralReturnBean<OapiSnsGetuserinfoBycodeResponse.UserInfo> generalReturnBean = new GeneralReturnBean<>();
@@ -51,17 +60,16 @@ public class CommonOperationController {
             generalReturnBean.setData(oapiSnsGetuserinfoBycodeResponse.getUserInfo());
         } else {
             generalReturnBean.setCode(-1);
-            generalReturnBean.setMessage("异常信息:" + errorMsg);
+            generalReturnBean.setMessage("GetUnionidByCode接口异常信息:" + errorMsg);
             generalReturnBean.setIssuccess(false);
         }
-
         return generalReturnBean;
     }
 
     /**
      * unionid换取用户userid
      *
-     * @param unionid
+     * @param unionid unionid
      * @return
      */
     @GetMapping("/GetUnionidByUnionid")
@@ -74,10 +82,10 @@ public class CommonOperationController {
         OapiGettokenResponse response = null;
         try {
             response = DingDingRequestUtils.getOapiGettokenResponse(defaultConfig.getAppKey(), defaultConfig.getAppsecret(), defaultConfig.getBaseUrl());
-            CommonUtil.writeNormalInfo("钉钉信息：" + JsonUtils.toJson(defaultConfig) + ",换取token：" + JsonUtils.toJson(response));
+            CommonUtil.writeNormalInfo("GetUnionidByUnionid接口钉钉配置信息：" + JsonUtils.toJson(defaultConfig) + ",换取token：" + JsonUtils.toJson(response));
         } catch (Exception e) {
             errorMsg += e.toString();
-            CommonUtil.writeErrorInfo(ExceptionUtils.getStackTrace(e));
+            CommonUtil.writeNormalInfo("GetUnionidByUnionid接口异常信息:" + ExceptionUtils.getStackTrace(e));
         }
 
         if (response != null) {
@@ -85,9 +93,11 @@ public class CommonOperationController {
             OapiUserGetUseridByUnionidResponse oapiUserGetUseridByUnionidResponse = null;
             try {
                 oapiUserGetUseridByUnionidResponse = DingDingRequestUtils.getUseridByUnionid(unionid, response.getAccessToken(), defaultConfig.getBaseUrl());
+                CommonUtil.writeNormalInfo("GetUnionidByUnionid接口钉钉配置信息：" + JsonUtils.toJson(defaultConfig) + ",换取用户信息：" + JsonUtils.toJson(response));
             } catch (Exception e) {
                 errorMsg += e.toString();
                 CommonUtil.writeErrorInfo(ExceptionUtils.getStackTrace(e));
+                CommonUtil.writeNormalInfo("GetUnionidByUnionid接口异常信息:" + ExceptionUtils.getStackTrace(e));
             }
 
             GeneralReturnBean<String> generalReturnBean = new GeneralReturnBean<>();
@@ -98,7 +108,7 @@ public class CommonOperationController {
                 generalReturnBean.setData(oapiUserGetUseridByUnionidResponse.getUserid());
             } else {
                 generalReturnBean.setCode(-1);
-                generalReturnBean.setMessage("异常信息:" + errorMsg);
+                generalReturnBean.setMessage("GetUnionidByUnionid接口异常信息:" + errorMsg);
                 generalReturnBean.setIssuccess(false);
             }
 
@@ -106,7 +116,7 @@ public class CommonOperationController {
         } else {
             GeneralReturnBean<String> generalReturnBean = new GeneralReturnBean<>();
             generalReturnBean.setCode(-1);
-            generalReturnBean.setMessage("异常信息:" + errorMsg);
+            generalReturnBean.setMessage("GetUnionidByUnionid接口异常信息:" + errorMsg);
             generalReturnBean.setIssuccess(false);
             return generalReturnBean;
         }
@@ -129,10 +139,10 @@ public class CommonOperationController {
         OapiGettokenResponse response = null;
         try {
             response = DingDingRequestUtils.getOapiGettokenResponse(defaultConfig.getAppKey(), defaultConfig.getAppsecret(), defaultConfig.getBaseUrl());
-            CommonUtil.writeNormalInfo("钉钉信息：" + JsonUtils.toJson(defaultConfig) + ",换取token：" + JsonUtils.toJson(response));
+            CommonUtil.writeNormalInfo("GetUserInfoGetByMobileResponse接口钉钉配置信息：" + JsonUtils.toJson(defaultConfig) + ",换取token：" + JsonUtils.toJson(response));
         } catch (Exception e) {
             errorMsg += e.toString();
-            CommonUtil.writeErrorInfo(ExceptionUtils.getStackTrace(e));
+            CommonUtil.writeNormalInfo("GetUserInfoGetByMobileResponse接口异常信息:" + ExceptionUtils.getStackTrace(e));
         }
 
         if (response != null) {
@@ -140,9 +150,10 @@ public class CommonOperationController {
             OapiUserGetByMobileResponse executePhone = null;
             try {
                 executePhone = DingDingRequestUtils.getOapiUserGetByMobileResponse(phone, response.getAccessToken(), defaultConfig.getBaseUrl());
+                CommonUtil.writeNormalInfo("GetUserInfoGetByMobileResponse接口钉钉配置信息：" + JsonUtils.toJson(defaultConfig) + ",换取手机号：" + JsonUtils.toJson(response));
             } catch (Exception e) {
                 errorMsg += e.toString();
-                CommonUtil.writeErrorInfo(ExceptionUtils.getStackTrace(e));
+                CommonUtil.writeNormalInfo("GetUserInfoGetByMobileResponse接口异常信息:" + ExceptionUtils.getStackTrace(e));
             }
 
             GeneralReturnBean<String> generalReturnBean = new GeneralReturnBean<>();
@@ -153,19 +164,17 @@ public class CommonOperationController {
                 generalReturnBean.setData(executePhone.getUserid());
             } else {
                 generalReturnBean.setCode(-1);
-                generalReturnBean.setMessage("异常信息:" + errorMsg);
+                generalReturnBean.setMessage("GetUserInfoGetByMobileResponse接口异常信息:" + errorMsg);
                 generalReturnBean.setIssuccess(false);
             }
-
             return generalReturnBean;
         } else {
             GeneralReturnBean<String> generalReturnBean = new GeneralReturnBean<>();
             generalReturnBean.setCode(-1);
-            generalReturnBean.setMessage("异常信息:" + errorMsg);
+            generalReturnBean.setMessage("GetUserInfoGetByMobileResponse接口异常信息:" + errorMsg);
             generalReturnBean.setIssuccess(false);
             return generalReturnBean;
         }
-
     }
 
 }
