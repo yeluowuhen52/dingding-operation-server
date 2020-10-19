@@ -1,8 +1,8 @@
 package com.quickshare.quicksharedingdingservice.controller.common;
 
 import com.dingtalk.api.response.*;
-import com.quickshare.quicksharedingdingservice.beans.BooleanReturnBean;
 import com.quickshare.quicksharedingdingservice.beans.GeneralReturnBean;
+import com.quickshare.quicksharedingdingservice.beans.MobileUserIdBean;
 import com.quickshare.quicksharedingdingservice.config.DingDingAppProperties;
 import com.quickshare.quicksharedingdingservice.config.DingDingAppidsProperties;
 import com.quickshare.quicksharedingdingservice.constant.Constant;
@@ -10,10 +10,9 @@ import com.quickshare.quicksharedingdingservice.utils.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.util.TextUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
 
 /**
  * @Author: Jiang
@@ -23,6 +22,7 @@ import java.util.HashMap;
  * @Update:
  */
 @RestController
+@RequestMapping("/Wechat/Operating/UserInfo")
 public class CommonOperationController {
 //    @Autowired
 //    DingDingProperties dingDingProperties;
@@ -54,7 +54,7 @@ public class CommonOperationController {
 
         GeneralReturnBean<OapiSnsGetuserinfoBycodeResponse.UserInfo> generalReturnBean = new GeneralReturnBean<>();
 
-        if (TextUtils.isEmpty(errorMsg) && oapiSnsGetuserinfoBycodeResponse != null && oapiSnsGetuserinfoBycodeResponse.getErrcode() != Constant.Response.ok) {
+        if (TextUtils.isEmpty(errorMsg) && oapiSnsGetuserinfoBycodeResponse != null && oapiSnsGetuserinfoBycodeResponse.getErrcode() == Constant.Response.ok) {
             generalReturnBean.setCode(0);
             generalReturnBean.setMessage("");
             generalReturnBean.setData(oapiSnsGetuserinfoBycodeResponse.getUserInfo());
@@ -72,8 +72,8 @@ public class CommonOperationController {
      * @param unionid unionid
      * @return
      */
-    @GetMapping("/GetUnionidByUnionid")
-    public GeneralReturnBean<String> getUseridByUnionid(String unionid) {
+    @GetMapping("/GetUseridByUnionid")
+    public GeneralReturnBean<MobileUserIdBean> getUseridByUnionid(String unionid) {
         //切换钉钉企业
         DingDingAppProperties defaultConfig = DingDingSwitchUtils.switchDingDingConfig(null, null);
         String errorMsg = "";
@@ -100,12 +100,12 @@ public class CommonOperationController {
                 CommonUtil.writeNormalInfo("GetUnionidByUnionid接口异常信息:" + ExceptionUtils.getStackTrace(e));
             }
 
-            GeneralReturnBean<String> generalReturnBean = new GeneralReturnBean<>();
+            GeneralReturnBean<MobileUserIdBean> generalReturnBean = new GeneralReturnBean<>();
 
             if (TextUtils.isEmpty(errorMsg) && oapiUserGetUseridByUnionidResponse != null && Constant.Response.ok == oapiUserGetUseridByUnionidResponse.getErrcode().intValue()) {
                 generalReturnBean.setCode(0);
                 generalReturnBean.setMessage("");
-                generalReturnBean.setData(oapiUserGetUseridByUnionidResponse.getUserid());
+                generalReturnBean.setData(new MobileUserIdBean(oapiUserGetUseridByUnionidResponse.getUserid()));
             } else {
                 generalReturnBean.setCode(-1);
                 generalReturnBean.setMessage("GetUnionidByUnionid接口异常信息:" + errorMsg);
@@ -114,7 +114,7 @@ public class CommonOperationController {
 
             return generalReturnBean;
         } else {
-            GeneralReturnBean<String> generalReturnBean = new GeneralReturnBean<>();
+            GeneralReturnBean<MobileUserIdBean> generalReturnBean = new GeneralReturnBean<>();
             generalReturnBean.setCode(-1);
             generalReturnBean.setMessage("GetUnionidByUnionid接口异常信息:" + errorMsg);
             generalReturnBean.setIssuccess(false);
@@ -129,8 +129,8 @@ public class CommonOperationController {
      * @param phone
      * @return
      */
-    @GetMapping("/GetUserInfoGetByMobileResponse")
-    public GeneralReturnBean<String> getUserInfoGetByMobileResponse(String phone) {
+    @GetMapping("/GetUserInfoByMobile")
+    public GeneralReturnBean<MobileUserIdBean> getUserInfoGetByMobileResponse(String phone) {
         //切换钉钉企业
         DingDingAppProperties defaultConfig = DingDingSwitchUtils.switchDingDingConfig(null, null);
         String errorMsg = "";
@@ -156,12 +156,12 @@ public class CommonOperationController {
                 CommonUtil.writeNormalInfo("GetUserInfoGetByMobileResponse接口异常信息:" + ExceptionUtils.getStackTrace(e));
             }
 
-            GeneralReturnBean<String> generalReturnBean = new GeneralReturnBean<>();
+            GeneralReturnBean<MobileUserIdBean> generalReturnBean = new GeneralReturnBean<>();
 
             if (TextUtils.isEmpty(errorMsg) && executePhone != null && Constant.Response.ok == executePhone.getErrcode().intValue()) {
                 generalReturnBean.setCode(0);
                 generalReturnBean.setMessage("");
-                generalReturnBean.setData(executePhone.getUserid());
+                generalReturnBean.setData(new MobileUserIdBean(executePhone.getUserid()));
             } else {
                 generalReturnBean.setCode(-1);
                 generalReturnBean.setMessage("GetUserInfoGetByMobileResponse接口异常信息:" + errorMsg);
@@ -169,7 +169,7 @@ public class CommonOperationController {
             }
             return generalReturnBean;
         } else {
-            GeneralReturnBean<String> generalReturnBean = new GeneralReturnBean<>();
+            GeneralReturnBean<MobileUserIdBean> generalReturnBean = new GeneralReturnBean<>();
             generalReturnBean.setCode(-1);
             generalReturnBean.setMessage("GetUserInfoGetByMobileResponse接口异常信息:" + errorMsg);
             generalReturnBean.setIssuccess(false);

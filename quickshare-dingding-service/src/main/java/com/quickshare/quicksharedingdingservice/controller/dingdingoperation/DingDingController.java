@@ -1,9 +1,10 @@
-package com.quickshare.quicksharedingdingservice.controller;
+package com.quickshare.quicksharedingdingservice.controller.dingdingoperation;
 
 import com.dingtalk.api.response.*;
 import com.quickshare.quicksharedingdingservice.beans.BooleanReturnBean;
 import com.quickshare.quicksharedingdingservice.beans.GeneralReturnBean;
 import com.quickshare.quicksharedingdingservice.config.DingDingAppProperties;
+import com.quickshare.quicksharedingdingservice.config.DingDingAppidsProperties;
 import com.quickshare.quicksharedingdingservice.constant.Constant;
 import com.quickshare.quicksharedingdingservice.constant.DingDingApi;
 import com.quickshare.quicksharedingdingservice.utils.*;
@@ -32,6 +33,7 @@ public class DingDingController {
         BooleanReturnBean booleanReturnBean;
         //切换钉钉企业
         DingDingAppProperties defaultConfig = DingDingSwitchUtils.switchDingDingConfig(null, null);
+        DingDingAppidsProperties dingDingAppidsProperties = DingDingSwitchUtils.switchDingDingAppidsConfig(null);
 
         String errorMsg = "";
 
@@ -42,7 +44,8 @@ public class DingDingController {
         //请求参数和基地址拼接
         HashMap<String, String> map = new HashMap<>();
         map.put("customCode", "customCode");
-        map.put("appid", "appid");
+        map.put("appid", dingDingAppidsProperties.getAppId());
+        map.put("phone", phone);
 
         String url = CommonUtil.getRedirectDingDingUrl("http://a2610377b5.zicp.vip/H5View/#/PlanOrderDetailPageDingDing", map, "dingoa7ntlpbq3z2nu523m");
 

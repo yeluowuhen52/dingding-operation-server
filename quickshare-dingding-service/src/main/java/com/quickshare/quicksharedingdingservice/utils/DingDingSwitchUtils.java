@@ -23,6 +23,8 @@ public class DingDingSwitchUtils {
     public static DingDingAppProperties switchDingDingConfig(String corpId, Long agentId) {
         DingDingAppProperties selectConfig;
         if (TextUtils.isEmpty(corpId) || agentId == null) {
+            selectConfig = DingDingConfigurationSwitch.getDefaultConfig();
+        } else {
             //测试新增配置信息（正式环境下，从数据库读取）
 //            DingDingAppProperties dingDingAppProperties = new DingDingAppProperties();
 //
@@ -34,9 +36,6 @@ public class DingDingSwitchUtils {
 //
 //            DingDingConfigurationSwitch.addDingDingConfig(dingDingAppProperties);
 //            DingDingSwitchUtils.switchDingDingConfig("exewfewfewf", 641732742L);
-
-            selectConfig = DingDingConfigurationSwitch.getDefaultConfig();
-        } else {
             selectConfig = DingDingConfigurationSwitch.getConfigService(corpId, agentId);
         }
 
@@ -60,6 +59,8 @@ public class DingDingSwitchUtils {
     public static DingDingAppidsProperties switchDingDingAppidsConfig(String appId) {
         DingDingAppidsProperties selectConfig;
         if (TextUtils.isEmpty(appId)) {
+            selectConfig = DingDingConfigurationSwitch.getDefaultAppIdConfig();
+        } else {
             //测试新增配置信息（正式环境下，从数据库读取）
 //            DingDingAppProperties dingDingAppProperties = new DingDingAppProperties();
 //
@@ -71,9 +72,6 @@ public class DingDingSwitchUtils {
 //
 //            DingDingConfigurationSwitch.addDingDingConfig(dingDingAppProperties);
 //            DingDingSwitchUtils.switchDingDingConfig("exewfewfewf", 641732742L);
-
-            selectConfig = DingDingConfigurationSwitch.getDefaultAppIdConfig();
-        } else {
             selectConfig = DingDingConfigurationSwitch.getDefaultAppIdConfig();
         }
 
