@@ -52,7 +52,7 @@ public class DingDingController {
         map.put("appid", dingDingAppidsProperties.getAppId());
         map.put("phone", phone);
 
-        String url = CommonUtil.getRedirectDingDingUrl(dingdingUrl, map, "dingoa7ntlpbq3z2nu523m");
+        String url = CommonUtil.getRedirectDingDingUrl(dingdingUrl, map, dingDingAppidsProperties.getAppId());
 
         OapiMessageCorpconversationGetsendresultResponse oapiMessageCorpconversationGetsendresultResponse = null;
 
