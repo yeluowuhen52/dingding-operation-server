@@ -8,6 +8,9 @@ logging:
 server:
   port: 8081
 
+#跳转的网页地址
+dingdingUrl: http://a2610377b5.zicp.vip/H5View/#/dingding/PlanOrderDetailPageDingDing
+
 #钉钉默认appId和Secret
 appId: dingoa7ntlpbq3z2nu523m
 appSecret: Af1zUlPoXVffwjsM6_PCcUiP35E9iMpTUeBp1oUwYBZ-nnz_JyzqYw0skJkqppKD

@@ -10,6 +10,7 @@ import com.quickshare.quicksharedingdingservice.constant.DingDingApi;
 import com.quickshare.quicksharedingdingservice.utils.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.util.TextUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,8 +26,12 @@ import java.util.HashMap;
  */
 @RestController
 public class DingDingController {
-//    @Autowired
+    //    @Autowired
 //    DingDingProperties dingDingProperties;
+
+    //钉钉地址
+    @Value("${dingdingUrl}")
+    private String dingdingUrl;
 
     @GetMapping("/sendDingDingMessage")
     public BooleanReturnBean sendDingDingMessage(@RequestParam(required = false) String phone) {
@@ -47,7 +52,7 @@ public class DingDingController {
         map.put("appid", dingDingAppidsProperties.getAppId());
         map.put("phone", phone);
 
-        String url = CommonUtil.getRedirectDingDingUrl("http://a2610377b5.zicp.vip/H5View/#/PlanOrderDetailPageDingDing", map, "dingoa7ntlpbq3z2nu523m");
+        String url = CommonUtil.getRedirectDingDingUrl(dingdingUrl, map, "dingoa7ntlpbq3z2nu523m");
 
         OapiMessageCorpconversationGetsendresultResponse oapiMessageCorpconversationGetsendresultResponse = null;
 
