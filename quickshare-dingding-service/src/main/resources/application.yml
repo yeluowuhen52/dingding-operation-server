@@ -5,8 +5,8 @@ logging:
     root: INFO
     org.springframework.web: INFO
 
-server:
-  port: 8081
+#server:
+#  port: 8081
 
 #跳转的网页地址
 dingdingUrl: http://a2610377b5.zicp.vip/H5View/#/dingding/PlanOrderDetailPageDingDing

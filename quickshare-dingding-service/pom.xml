@@ -54,7 +54,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- dingding -->
+        <!-- 钉钉官方框架 -->
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>alibaba-dingtalk-service-sdk</artifactId>
