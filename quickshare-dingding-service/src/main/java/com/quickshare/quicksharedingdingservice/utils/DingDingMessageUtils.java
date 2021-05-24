@@ -82,7 +82,7 @@ public class DingDingMessageUtils {
 //        }
 
         //查询发送消息的状态
-        OapiMessageCorpconversationGetsendresultResponse oapiMessageCorpconversationGetsendresultResponse = null;
+        OapiMessageCorpconversationGetsendresultResponse oapiMessageCorpconversationGetsendresultResponse;
 //        if (responseSend.getErrcode() == Constant.Response.ok) {
 //            try {
         oapiMessageCorpconversationGetsendresultResponse = getSendMessgaeState(dingAppProperties, methodName, responseSend);
@@ -139,9 +139,9 @@ public class DingDingMessageUtils {
     /**
      * 获取手机号关联信息
      *
-     * @param dingAppProperties
-     * @param methodName
-     * @param phone
+     * @param methodName        请求方法名称
+     * @param dingAppProperties 钉钉配置信息
+     * @param phone             手机号
      * @throws Exception
      */
     public static OapiUserGetByMobileResponse getPhoneInfo(DingDingAppProperties dingAppProperties, String methodName, String phone) throws Exception {
@@ -162,8 +162,13 @@ public class DingDingMessageUtils {
     /**
      * 发送消息
      *
-     * @param dingAppProperties
-     * @param methodName
+     * @param methodName        请求方法名称
+     * @param dingAppProperties 钉钉配置信息
+     * @param title             标题
+     * @param singleTitle       子标题
+     * @param markDownStr       基地址
+     * @param url               链接地址
+     * @param toAllUser         是否发给所有人
      * @throws Exception
      */
     public static OapiMessageCorpconversationAsyncsendV2Response sendMessgae(DingDingAppProperties dingAppProperties, String userId, boolean toAllUser,
@@ -186,8 +191,8 @@ public class DingDingMessageUtils {
     /**
      * 查询发送消息状态
      *
-     * @param dingAppProperties
-     * @param methodName
+     * @param methodName        请求方法名称
+     * @param dingAppProperties 钉钉配置信息
      * @throws Exception
      */
     public static OapiMessageCorpconversationGetsendresultResponse getSendMessgaeState(DingDingAppProperties dingAppProperties, String methodName,
