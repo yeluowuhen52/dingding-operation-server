@@ -18,7 +18,6 @@ import org.apache.http.util.TextUtils;
  * @Update:
  */
 public class DingDingMessageUtils {
-    private static int num = 0;
 
     /**
      * 发送消息封装
@@ -37,10 +36,9 @@ public class DingDingMessageUtils {
     public static OapiMessageCorpconversationGetsendresultResponse sendNormalDingDingMessage(String methodName, DingDingAppProperties dingAppProperties,
                                                                                              String phone, String title, String singleTitle, String url,
                                                                                              String markDownStr, boolean toAllUser) throws Exception {
-        num = 0;
         if (TextUtils.isEmpty(dingAppProperties.getAccessToken())) {
 //            response = DingDingRequestUtils.getOapiGettokenResponse(dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl());
-            getAccessToken(dingAppProperties, methodName, dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl());
+            getAccessToken(dingAppProperties, methodName, dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl(), true);
         }
         //2021年5月24号的accessToken
         dingAppProperties.setAccessToken("1a13137dbb8c3835be5e737ce7fa72b0");
@@ -51,7 +49,7 @@ public class DingDingMessageUtils {
         executePhone = getPhoneInfo(dingAppProperties, methodName, phone);
         if (executePhone.getErrcode().equals(Constant.ErrorCode.tokenError1) || executePhone.getErrcode().equals(Constant.ErrorCode.tokenError2) ||
                 executePhone.getErrcode().equals(Constant.ErrorCode.tokenError3)) {
-            getAccessToken(dingAppProperties, methodName, dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl());
+            getAccessToken(dingAppProperties, methodName, dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl(), true);
             executePhone = getPhoneInfo(dingAppProperties, methodName, phone);
         }
 //        } catch (Exception e) {
@@ -73,7 +71,7 @@ public class DingDingMessageUtils {
 //        CommonUtil.writeNormalInfo(methodName + "接口，" + "钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",发送消息结果：" + JsonUtils.toJson(responseSend));
         if (executePhone.getErrcode().equals(Constant.ErrorCode.tokenError1) || executePhone.getErrcode().equals(Constant.ErrorCode.tokenError2) ||
                 executePhone.getErrcode().equals(Constant.ErrorCode.tokenError3)) {
-            getAccessToken(dingAppProperties, methodName, dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl());
+            getAccessToken(dingAppProperties, methodName, dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl(), true);
             responseSend = sendMessgae(dingAppProperties, executePhone.getUserid(), toAllUser, methodName, title, markDownStr, singleTitle, url);
         }
 //        } catch (Exception e) {
@@ -94,7 +92,7 @@ public class DingDingMessageUtils {
 //                responseSend.getTaskId() + "查询发送消息结果：" + JsonUtils.toJson(responseSend));
         if (executePhone.getErrcode().equals(Constant.ErrorCode.tokenError1) || executePhone.getErrcode().equals(Constant.ErrorCode.tokenError2) ||
                 executePhone.getErrcode().equals(Constant.ErrorCode.tokenError3)) {
-            getAccessToken(dingAppProperties, methodName, dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl());
+            getAccessToken(dingAppProperties, methodName, dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl(), true);
             oapiMessageCorpconversationGetsendresultResponse = getSendMessgaeState(dingAppProperties, methodName, responseSend);
         }
 
@@ -105,7 +103,6 @@ public class DingDingMessageUtils {
 ////                return booleanReturnBean;
 //            }
 //        }
-
         return oapiMessageCorpconversationGetsendresultResponse;
     }
 
@@ -119,20 +116,21 @@ public class DingDingMessageUtils {
      * @param baseUrl
      * @throws Exception
      */
-    public static void getAccessToken(DingDingAppProperties dingAppProperties, String methodName, String appKey, String appSecret, String baseUrl) throws Exception {
-        num++;
-        if (num == 10) {
-            throw new Exception(methodName + "getAccessToken接口，" + "已经达到最大换取次数:" + num);
-        }
+    public static void getAccessToken(DingDingAppProperties dingAppProperties, String methodName, String appKey, String appSecret, String baseUrl, boolean isRepeat) throws Exception {
         //换取token
-        OapiGettokenResponse response;
+        OapiGettokenResponse response = null;
         try {
             response = DingDingRequestUtils.getOapiGettokenResponse(appKey, appSecret, baseUrl);
-            CommonUtil.writeNormalInfo(methodName + "接口，" + "钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",换取token：" + JsonUtils.toJson(response));
+            CommonUtil.writeNormalInfo(methodName + "接口，钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",换取token：" + JsonUtils.toJson(response));
             dingAppProperties.setAccessToken(response.getAccessToken());
         } catch (Exception e) {
-            CommonUtil.writeErrorInfo(methodName + "接口，" + "钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",换取token：" + ExceptionUtils.getStackTrace(e));
-            throw new Exception(methodName + "接口，" + "换取token异常:" + e.toString());
+            CommonUtil.writeErrorInfo(methodName + "接口，钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",换取token：" + ExceptionUtils.getStackTrace(e));
+            if (isRepeat) {
+                getAccessToken(dingAppProperties, methodName, appKey, appSecret, baseUrl, false);
+                CommonUtil.writeNormalInfo(methodName + "接口，钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",换取token失败：" + JsonUtils.toJson(response) + "正在尝试重新获取!");
+            } else {
+                throw new Exception(methodName + "接口，换取token异常:" + e.toString());
+            }
 //            booleanReturnBean = CommonUtil.getTrueReturnBean(ExceptionUtils.getStackTrace(e));
 //            return booleanReturnBean;
         }
@@ -150,11 +148,11 @@ public class DingDingMessageUtils {
         OapiUserGetByMobileResponse executePhone;
         try {
             executePhone = DingDingRequestUtils.getOapiUserGetByMobileResponse(phone, dingAppProperties.getAccessToken(), dingAppProperties.getBaseUrl());
-            CommonUtil.writeNormalInfo(methodName + "接口，" + "钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",换取手机号结果：" + JsonUtils.toJson(executePhone));
+            CommonUtil.writeNormalInfo(methodName + "接口，钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",换取手机号结果：" + JsonUtils.toJson(executePhone));
 
         } catch (Exception e) {
-            CommonUtil.writeErrorInfo(methodName + "接口，" + "钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",换取手机号结果：" + ExceptionUtils.getStackTrace(e));
-            throw new Exception(methodName + "接口，" + "换取用户手机号异常:" + e.toString());
+            CommonUtil.writeErrorInfo(methodName + "接口，钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",换取手机号结果：" + ExceptionUtils.getStackTrace(e));
+            throw new Exception(methodName + "接口，换取用户手机号异常:" + e.toString());
 //            booleanReturnBean = CommonUtil.getTrueReturnBean(ExceptionUtils.getStackTrace(e));
 //            return booleanReturnBean;
         }
@@ -175,10 +173,10 @@ public class DingDingMessageUtils {
             responseSend = DingDingRequestUtils.sendActionCardMessage(userId, dingAppProperties.getAgentId(), toAllUser,
                     title, markDownStr, singleTitle, url,
                     Constant.DingDinngMessageType.ActionCard, dingAppProperties.getAccessToken(), dingAppProperties.getBaseUrl());
-            CommonUtil.writeNormalInfo(methodName + "接口，" + "钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",发送消息结果：" + JsonUtils.toJson(responseSend));
+            CommonUtil.writeNormalInfo(methodName + "接口，钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",发送消息结果：" + JsonUtils.toJson(responseSend));
         } catch (Exception e) {
-            CommonUtil.writeErrorInfo(methodName + "接口，" + "钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",发送消息结果：" + ExceptionUtils.getStackTrace(e));
-            throw new Exception(methodName + "接口，" + "发送消息异常:" + e.toString());
+            CommonUtil.writeErrorInfo(methodName + "接口，钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",发送消息结果：" + ExceptionUtils.getStackTrace(e));
+            throw new Exception(methodName + "接口，发送消息异常:" + e.toString());
 //            booleanReturnBean = CommonUtil.getTrueReturnBean(ExceptionUtils.getStackTrace(e));
 //            return booleanReturnBean;
         }
@@ -200,10 +198,10 @@ public class DingDingMessageUtils {
             try {
                 oapiMessageCorpconversationGetsendresultResponse = DingDingRequestUtils.getOapiSendResuktResponse(responseSend.getTaskId(),
                         dingAppProperties.getAgentId(), dingAppProperties.getAccessToken(), dingAppProperties.getBaseUrl());
-                CommonUtil.writeNormalInfo(methodName + "接口，" + "钉钉信息：" + JsonUtils.toJson(dingAppProperties) + "," +
+                CommonUtil.writeNormalInfo(methodName + "接口，钉钉信息：" + JsonUtils.toJson(dingAppProperties) + "," +
                         responseSend.getTaskId() + "查询发送消息结果：" + JsonUtils.toJson(responseSend));
             } catch (Exception e) {
-                CommonUtil.writeErrorInfo(methodName + "接口，" + "查询发送消息消息结果异常:" + ExceptionUtils.getStackTrace(e));
+                CommonUtil.writeErrorInfo(methodName + "接口，查询发送消息消息结果异常:" + ExceptionUtils.getStackTrace(e));
                 throw new Exception(e.toString());
 //                booleanReturnBean = CommonUtil.getTrueReturnBean(ExceptionUtils.getStackTrace(e));
 //                return booleanReturnBean;
