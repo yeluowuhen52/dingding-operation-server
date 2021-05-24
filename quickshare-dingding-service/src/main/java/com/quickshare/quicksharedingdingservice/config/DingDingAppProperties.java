@@ -42,6 +42,10 @@ public class DingDingAppProperties {
    * appSecret
    */
   private String appSecret;
+  /**
+   * 秘钥
+   */
+  private String accessToken;
 
   @Override
   public String toString() {

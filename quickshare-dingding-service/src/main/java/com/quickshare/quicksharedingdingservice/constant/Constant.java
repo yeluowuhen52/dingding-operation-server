@@ -32,6 +32,18 @@ public class Constant {
     }
 
     /**
+     * 返回错误码
+     */
+    public static class ErrorCode {
+        //临时授权只能使用一次后就不能在使用。 需要重新执行授权操作有开放平台推送新的临时授权码。
+        public static Long tokenError1 = 40102L;
+        //请检查该suitetoken是否已经过期。
+        public static Long tokenError2 = 42009L;
+        //请检查该suitetoken是否已经过期或不正确。
+        public static Long tokenError3 = 48003L;
+    }
+
+    /**
      * 钉钉消息类型
      */
     public static class DingDinngMessageType {
