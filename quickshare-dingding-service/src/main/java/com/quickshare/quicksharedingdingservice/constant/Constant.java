@@ -41,6 +41,22 @@ public class Constant {
         public static Long tokenError2 = 42009L;
         //请检查该suitetoken是否已经过期或不正确。
         public static Long tokenError3 = 48003L;
+        //不合法的accessToken
+        public static Long tokenError4 = 40014L;
+    }
+
+    /**
+     * 返回错误码
+     */
+    public static class ErrorCodeStr {
+        //临时授权只能使用一次后就不能在使用。 需要重新执行授权操作有开放平台推送新的临时授权码。
+        public static String tokenError1 = "40102";
+        //请检查该suitetoken是否已经过期。
+        public static String tokenError2 = "42009";
+        //请检查该suitetoken是否已经过期或不正确。
+        public static String tokenError3 = "48003";
+        //不合法的accessToken
+        public static String tokenError4 = "40014";
     }
 
     /**

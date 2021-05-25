@@ -6,7 +6,10 @@ import com.dingtalk.api.request.*;
 import com.dingtalk.api.response.*;
 import com.quickshare.quicksharedingdingservice.constant.Constant;
 import com.quickshare.quicksharedingdingservice.constant.DingDingApi;
+import com.taobao.api.TaobaoResponse;
 import org.apache.http.util.TextUtils;
+
+import static com.quickshare.quicksharedingdingservice.utils.CommonUtil.isErrorResponse;
 
 /**
  * @Author: Jiang
@@ -54,8 +57,12 @@ public class DingDingRequestUtils {
         request111.setMobile(mobile);
         OapiUserGetByMobileResponse response;
         response = client111.execute(request111, accessToken);
+        isErrorResponse(response);
+
         if (response.getErrcode() != Constant.Response.ok) {
-            throw new Exception(response.getErrmsg());
+            if (!isErrorResponse(response)) {
+                throw new Exception(response.getErrmsg());
+            }
         }
         return response;
     }
@@ -105,7 +112,9 @@ public class DingDingRequestUtils {
         OapiMessageCorpconversationAsyncsendV2Response response;
         response = client.execute(request, accessToken);
         if (response.getErrcode() != Constant.Response.ok) {
-            throw new Exception(response.getErrmsg());
+            if (!isErrorResponse(response)) {
+                throw new Exception(response.getErrmsg());
+            }
         }
         return response;
     }
@@ -128,10 +137,14 @@ public class DingDingRequestUtils {
         request.setTaskId(taskId);
         OapiMessageCorpconversationGetsendprogressResponse response = client.execute(request, accessToken);
         if (response.getErrcode() != Constant.Response.ok) {
-            throw new Exception(response.getErrmsg());
+            if (!isErrorResponse(response)) {
+                throw new Exception(response.getErrmsg());
+            }
         }
         return response;
     }
+
+
 
     /**
      * 获取消息返回状态
@@ -151,7 +164,9 @@ public class DingDingRequestUtils {
         request.setTaskId(taskId);
         OapiMessageCorpconversationGetsendresultResponse response = client.execute(request, accessToken);
         if (response.getErrcode() != Constant.Response.ok) {
-            throw new Exception(response.getErrmsg());
+            if (!isErrorResponse(response)) {
+                throw new Exception(response.getErrmsg());
+            }
         }
         return response;
     }
@@ -173,7 +188,9 @@ public class DingDingRequestUtils {
         request.setTmpAuthCode(code);
         OapiSnsGetuserinfoBycodeResponse response = client.execute(request, appId, appSecret);
         if (response.getErrcode() != Constant.Response.ok) {
-            throw new Exception(response.getErrmsg());
+            if (!isErrorResponse(response)) {
+                throw new Exception(response.getErrmsg());
+            }
         }
         return response;
     }
@@ -195,7 +212,9 @@ public class DingDingRequestUtils {
         request.setHttpMethod("GET");
         OapiUserGetUseridByUnionidResponse response = client.execute(request, accessToken);
         if (response.getErrcode() != Constant.Response.ok) {
-            throw new Exception(response.getErrmsg());
+            if (!isErrorResponse(response)) {
+                throw new Exception(response.getErrmsg());
+            }
         }
         return response;
     }

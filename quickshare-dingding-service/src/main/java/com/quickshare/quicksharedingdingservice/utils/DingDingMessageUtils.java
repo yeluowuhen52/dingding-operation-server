@@ -7,8 +7,11 @@ import com.dingtalk.api.response.*;
 import com.quickshare.quicksharedingdingservice.config.DingDingAppProperties;
 import com.quickshare.quicksharedingdingservice.constant.Constant;
 import com.quickshare.quicksharedingdingservice.constant.DingDingApi;
+import com.taobao.api.TaobaoResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.util.TextUtils;
+
+import static com.quickshare.quicksharedingdingservice.utils.CommonUtil.isErrorResponse;
 
 /**
  * @Author: Jiang
@@ -36,19 +39,22 @@ public class DingDingMessageUtils {
     public static OapiMessageCorpconversationGetsendresultResponse sendNormalDingDingMessage(String methodName, DingDingAppProperties dingAppProperties,
                                                                                              String phone, String title, String singleTitle, String url,
                                                                                              String markDownStr, boolean toAllUser) throws Exception {
+        //2021年5月24号的accessToken
+        dingAppProperties.setAccessToken("1a13137dbb8c3835be5e737ce7fa72b0");
+
         if (TextUtils.isEmpty(dingAppProperties.getAccessToken())) {
 //            response = DingDingRequestUtils.getOapiGettokenResponse(dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl());
             getAccessToken(dingAppProperties, methodName, dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl(), true);
         }
-        //2021年5月24号的accessToken
-        dingAppProperties.setAccessToken("1a13137dbb8c3835be5e737ce7fa72b0");
 
         //换取用户手机号
         OapiUserGetByMobileResponse executePhone;
 //        try {
         executePhone = getPhoneInfo(dingAppProperties, methodName, phone);
-        if (executePhone.getErrcode().equals(Constant.ErrorCode.tokenError1) || executePhone.getErrcode().equals(Constant.ErrorCode.tokenError2) ||
-                executePhone.getErrcode().equals(Constant.ErrorCode.tokenError3)) {
+//        if (executePhone.getErrcode().equals(Constant.ErrorCode.tokenError1) || executePhone.getErrcode().equals(Constant.ErrorCode.tokenError2) ||
+//                executePhone.getErrcode().equals(Constant.ErrorCode.tokenError3)) {
+        if (isErrorResponse(executePhone)) {
+//            }
             getAccessToken(dingAppProperties, methodName, dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl(), true);
             executePhone = getPhoneInfo(dingAppProperties, methodName, phone);
         }
@@ -69,8 +75,9 @@ public class DingDingMessageUtils {
 //                    title, markDownStr, singleTitle, url,
 //                    Constant.DingDinngMessageType.ActionCard, dingAppProperties.getAccessToken(), dingAppProperties.getBaseUrl());
 //        CommonUtil.writeNormalInfo(methodName + "接口，" + "钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",发送消息结果：" + JsonUtils.toJson(responseSend));
-        if (executePhone.getErrcode().equals(Constant.ErrorCode.tokenError1) || executePhone.getErrcode().equals(Constant.ErrorCode.tokenError2) ||
-                executePhone.getErrcode().equals(Constant.ErrorCode.tokenError3)) {
+//        if (executePhone.getErrcode().equals(Constant.ErrorCode.tokenError1) || executePhone.getErrcode().equals(Constant.ErrorCode.tokenError2) ||
+//                executePhone.getErrcode().equals(Constant.ErrorCode.tokenError3)) {
+        if (isErrorResponse(executePhone)) {
             getAccessToken(dingAppProperties, methodName, dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl(), true);
             responseSend = sendMessgae(dingAppProperties, executePhone.getUserid(), toAllUser, methodName, title, markDownStr, singleTitle, url);
         }
@@ -90,8 +97,9 @@ public class DingDingMessageUtils {
 //                        dingAppProperties.getAgentId(), dingAppProperties.getAccessToken(), dingAppProperties.getBaseUrl());
 //        CommonUtil.writeNormalInfo(methodName + "接口，" + "钉钉信息：" + JsonUtils.toJson(dingAppProperties) + "," +
 //                responseSend.getTaskId() + "查询发送消息结果：" + JsonUtils.toJson(responseSend));
-        if (executePhone.getErrcode().equals(Constant.ErrorCode.tokenError1) || executePhone.getErrcode().equals(Constant.ErrorCode.tokenError2) ||
-                executePhone.getErrcode().equals(Constant.ErrorCode.tokenError3)) {
+//        if (executePhone.getErrcode().equals(Constant.ErrorCode.tokenError1) || executePhone.getErrcode().equals(Constant.ErrorCode.tokenError2) ||
+//                executePhone.getErrcode().equals(Constant.ErrorCode.tokenError3)) {
+        if (isErrorResponse(oapiMessageCorpconversationGetsendresultResponse)) {
             getAccessToken(dingAppProperties, methodName, dingAppProperties.getAppKey(), dingAppProperties.getAppsecret(), dingAppProperties.getBaseUrl(), true);
             oapiMessageCorpconversationGetsendresultResponse = getSendMessgaeState(dingAppProperties, methodName, responseSend);
         }

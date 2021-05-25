@@ -2,6 +2,8 @@ package com.quickshare.quicksharedingdingservice.utils;
 
 import com.dingtalk.api.response.OapiMessageCorpconversationGetsendresultResponse;
 import com.quickshare.quicksharedingdingservice.beans.BooleanReturnBean;
+import com.quickshare.quicksharedingdingservice.constant.Constant;
+import com.taobao.api.TaobaoResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
@@ -469,5 +471,16 @@ public class CommonUtil {
             errorMsg += "发送失败的无效的用户id：" + JsonUtils.toJson(response.getInvalidUserIdList()) + ";";
         }
         return errorMsg;
+    }
+
+    public static boolean isErrorResponse(TaobaoResponse response) {
+        if (Constant.ErrorCodeStr.tokenError1.equals(response.getErrorCode()) ||
+                Constant.ErrorCodeStr.tokenError2.equals(response.getErrorCode()) ||
+                Constant.ErrorCodeStr.tokenError3.equals(response.getErrorCode()) ||
+                Constant.ErrorCodeStr.tokenError4.equals(response.getErrorCode())) {
+            return true;
+//            throw new Exception(response.getErrmsg());
+        }
+        return false;
     }
 }
