@@ -11,6 +11,8 @@ import com.taobao.api.TaobaoResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.util.TextUtils;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 import static com.quickshare.quicksharedingdingservice.utils.CommonUtil.isErrorResponse;
 
 /**
@@ -125,13 +127,17 @@ public class DingDingMessageUtils {
      * @throws Exception
      */
     public static void getAccessToken(DingDingAppProperties dingAppProperties, String methodName, String appKey, String appSecret, String baseUrl, boolean isRepeat) throws Exception {
+        ReentrantLock lock = new ReentrantLock();
         //换取token
         OapiGettokenResponse response = null;
         try {
+            lock.lock();
             response = DingDingRequestUtils.getOapiGettokenResponse(appKey, appSecret, baseUrl);
             CommonUtil.writeNormalInfo(methodName + "接口，钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",换取token：" + JsonUtils.toJson(response));
             dingAppProperties.setAccessToken(response.getAccessToken());
         } catch (Exception e) {
+            lock.unlock();
+
             CommonUtil.writeErrorInfo(methodName + "接口，钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",换取token：" + ExceptionUtils.getStackTrace(e));
             if (isRepeat) {
                 getAccessToken(dingAppProperties, methodName, appKey, appSecret, baseUrl, false);
@@ -142,6 +148,7 @@ public class DingDingMessageUtils {
 //            booleanReturnBean = CommonUtil.getTrueReturnBean(ExceptionUtils.getStackTrace(e));
 //            return booleanReturnBean;
         }
+        lock.unlock();
     }
 
     /**
