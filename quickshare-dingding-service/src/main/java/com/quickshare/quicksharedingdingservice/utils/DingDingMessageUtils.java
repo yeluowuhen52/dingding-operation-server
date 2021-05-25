@@ -136,8 +136,6 @@ public class DingDingMessageUtils {
             CommonUtil.writeNormalInfo(methodName + "接口，钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",换取token：" + JsonUtils.toJson(response));
             dingAppProperties.setAccessToken(response.getAccessToken());
         } catch (Exception e) {
-            lock.unlock();
-
             CommonUtil.writeErrorInfo(methodName + "接口，钉钉信息：" + JsonUtils.toJson(dingAppProperties) + ",换取token：" + ExceptionUtils.getStackTrace(e));
             if (isRepeat) {
                 getAccessToken(dingAppProperties, methodName, appKey, appSecret, baseUrl, false);
@@ -147,8 +145,9 @@ public class DingDingMessageUtils {
             }
 //            booleanReturnBean = CommonUtil.getTrueReturnBean(ExceptionUtils.getStackTrace(e));
 //            return booleanReturnBean;
+        }finally {
+            lock.unlock();
         }
-        lock.unlock();
     }
 
     /**
